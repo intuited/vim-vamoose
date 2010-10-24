@@ -1,0 +1,56 @@
+*vamoose.txt* Vim Access to Macros in OpenOffice Session Environments
+
+Author:  Ted Tibbetts <intuited à j'y aimé à y elle point com>
+License: The same terms as Vim itself.  See |license|.
+
+==============================================================================
+Intro                                                        *vamoose-intro*
+
+Vamoose connects a buffer with a running instance of OpenOffice.org,
+providing a convenient interface for editing Basic scripts in that instance.
+
+A Vamoosed buffer is linked to a particular macro module.
+As you may know, an OpenOffice.org macro module can be identified by
+its document, library, and module names.
+
+------------------------------------------------------------------------------
+Installation                        *vamoose-install* *vamoose-installation*
+
+You'll need to have the python package `ooo-macro-exchange`
+installed on your system in order to use vamoose.
+
+This can be installed via PyPI by running the command >
+    easy_install ooo-macro-exchange
+<
+
+In order for ooo-macro-exchange to work,
+you must have the UNO-python bridge installed.
+If this is not already installed on your Debian-ish system, >
+    sudo aptitude install python-uno
+should do the trick.
+
+Of course, since vamoose relies on Python,
+you'll also need to have a vim binary
+that was compiled with the |+python| feature.
+
+==============================================================================
+Buffer initialization                                         *Vamoose-init*
+
+The buffer's corresponding module can be set for a given buffer with >
+    :Vamoose init <DOCUMENT> <LIBRARY> <MODULE>
+<
+Subsequently running the |vamoose-push| or |vamoose-pull| commands
+will push that buffer's contents to,
+or replace its contents with those from,
+the MODULE in the LIBRARY of the DOCUMENT in the running OOo instance.
+
+------------------------------------------------------------------------------
+Pushing and pulling                                           *vamoose-push*
+                                                              *vamoose-pull*
+These are pretty straightforward: You can
+replace the contents of the current buffer >
+    :Vamoose pull
+with the contents of the buffer's corresponding module,
+or replace the contents of the corresponding module >
+    :Vamoose push
+with the contents of the buffer.

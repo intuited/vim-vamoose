@@ -1,0 +1,10 @@
+{
+  "name" : "vamoose",
+  "version" : "0.1",
+  "author" : "Ted Tibbetts <intuited@gmail.com>",
+  "maintainer" : "Ted Tibbetts <intuited@gmail.com>",
+  "repository" : {"type": "git", "url": "git://github.com/intuited/vamoose.git"},
+  "dependencies" : {},
+  "description" : "Vim Access to Macros in OpenOffice Session Environments",
+  "homepage": "http://github.com/intuited/vamoose.git"
+}
