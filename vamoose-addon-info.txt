@@ -3,8 +3,8 @@
   "version" : "0.1",
   "author" : "Ted Tibbetts <intuited@gmail.com>",
   "maintainer" : "Ted Tibbetts <intuited@gmail.com>",
-  "repository" : {"type": "git", "url": "git://github.com/intuited/vamoose.git"},
+  "repository" : {"type": "git", "url": "git://github.com/intuited/vim-vamoose.git"},
   "dependencies" : {},
   "description" : "Vim Access to Macros in OpenOffice Session Environments",
-  "homepage": "http://github.com/intuited/vamoose.git"
+  "homepage": "http://github.com/intuited/vim-vamoose"
 }
