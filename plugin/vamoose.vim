@@ -9,10 +9,10 @@ if exists('g:loaded_vamoose') || &cp
 endif
 let g:loaded_vamoose = 1
 
-" The autocommand stuff normally drives everything
+" The autocommand stuff normally drives everything.
 augroup vamoose_files
   autocmd!
   autocmd BufReadCmd  vamoose://**  exe vamoose#pull()
-  ""++  autocmd BufWriteCmd vamoose://**  exe s:BufWriteIndexFile()
-  ""++  autocmd FileReadCmd vamoose://**//[0-3]/**          exe s:FileRead()
+  autocmd BufWriteCmd vamoose://**  exe vamoose#push()
+  " TODO: add a FileReadCmd autocommand.
 augroup END

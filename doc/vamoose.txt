@@ -13,7 +13,7 @@ A Vamoosed buffer is linked to a particular macro module.
 As you may know, an OpenOffice.org macro module can be identified by
 its document, library, and module names.
 
-------------------------------------------------------------------------------
+==============================================================================
 Installation                        *vamoose-install* *vamoose-installation*
 
 You'll need to have the python package `ooo-macro-exchange`
@@ -34,23 +34,38 @@ you'll also need to have a vim binary
 that was compiled with the |+python| feature.
 
 ==============================================================================
-Buffer initialization                                         *Vamoose-init*
+Vamoose URLs    *vamoose-urls* *vamoose-usage* *vamoose-edit* *vamoose-open*
 
-The buffer's corresponding module can be set for a given buffer with >
-    :Vamoose init <DOCUMENT> <LIBRARY> <MODULE>
+Vamoose works via vamoose URLs that look like this: >
+    vamoose://host:port//document//module.library
 <
-Subsequently running the |vamoose-push| or |vamoose-pull| commands
-will push that buffer's contents to,
-or replace its contents with those from,
-the MODULE in the LIBRARY of the DOCUMENT in the running OOo instance.
+The host:port part is optional,
+and you can include only one of them, with a colon before/after it.
 
-------------------------------------------------------------------------------
-Pushing and pulling                                           *vamoose-push*
-                                                              *vamoose-pull*
-These are pretty straightforward: You can
-replace the contents of the current buffer >
-    :Vamoose pull
-with the contents of the buffer's corresponding module,
-or replace the contents of the corresponding module >
-    :Vamoose push
-with the contents of the buffer.
+So if you have an OpenOffice listening on the default port (2002),
+and an open document named "SpruceGoose",
+you can open a Basic module with the command >
+    :tabedit vamoose://SpruceGoose//Standard.Module1
+<
+
+If you need to specify the port 1234, it would look like >
+    :tabedit vamoose://:1234//SpruceGoose//Standard.Module1
+
+==============================================================================
+Connecting to OpenOffice                               *vamoose-running-ooo*
+
+In order to be able to connect to OpenOffice,
+it needs to be started in "listen mode".
+
+This is accomplished by launching it with a command like >
+    $ ooffice -accept='socket,host=localhost,port=2002;urp;'
+<
+That will start a visible open office,
+ready to accept connections from vamoose on the default port.
+
+If you already have OpenOffice up and running, you'll have to close it down.
+Sorry!
+
+If you also pass the option `-headless`,
+OpenOffice will start in invisible stealth mode.
+This will let you edit macros without alerting any spies to your activity.

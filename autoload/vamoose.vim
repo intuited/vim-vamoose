@@ -83,15 +83,13 @@ funct! vamoose#buffer_url(...)
   return vamoose#parse_url(bufname(buffer))
 endfunct
 
-" vamoose#pull([url[, override]])
-" Return the contents of the module for the current buffer
-" as a List of Strings.
+" Support function for vamoose#push and vamoose#pull.
 " Arguments:
 "   url: Can be given as a URL string or a dictionary of components.
 "        If not given, the current buffer's URL is used.
 "   override: Unless given as a truthy value, missing elements in `url`
 "             are filled in with components from the buffer URL.
-funct! vamoose#pull(...)
+funct! s:prepare_pull_push_args(...)
   let url = a:0 ? vamoose#parse_url(a:1) : {}
 
   if a:0 <= 1 || !a:2
@@ -101,44 +99,28 @@ funct! vamoose#pull(...)
 
   let exchange_kwargs = filter(copy(url), 'index(["host", "port"], v:key) >= 0')
   let pull_args = [url.document, url.library, url.module]
+  return [exchange_kwargs, pull_args]
+endfunct
 
-  python vim.current.buffer[:] = map(str, oomax.Exchange(**vim.eval('exchange_kwargs')).pull(*vim.eval('pull_args')))
+" vamoose#pull([url[, override]])
+" Sets the contents of the current buffer to the lines from the module at `url`.
+funct! vamoose#pull(...)
+  let [exchange_kwargs, args] = call(function('s:prepare_pull_push_args'), a:000)
+
+  python vim.current.buffer[:] = map(str, oomax.Exchange(**vim.eval('exchange_kwargs')).pull(*vim.eval('args')))
   set ft=basic
 endfunct
 
-""--  " vamoose#set(url, [combine])
-""--  " Sets the current buffer's URL to `url`.
-""--  " If `combine` is nonzero,
-""--  " existing components in the current buffer URL are retained.
-""--  funct! vamoose#set(url, ...)
-""--    let url = vamoose#parse_url(a:url)
-""--    if a:0 && a:1
-""--      call extend(url, vamoose#buffer_url(), 'keep')
-""--    endif
-""--    let 
-
-
-
-""~~  funct! Test(p1, ...)
-""~~    echo 'p1: '.a:p1
-""~~    echo '...: '.string(a:000)
-""~~    if a:0 && a:1
-""~~      echo 'a:0 && a:1'
-""~~    else
-""~~      if a:0
-""~~        echo 'a:0'
-""~~        if a:0 && !a:1
-""~~          echo 'a:0 && !a:1'
-""~~        endif
-""~~      else
-""~~        echo '!a:0'
-""~~      endif
-""~~    endif
-""~~  endfunct
+" vamoose#push([url[, override]])
+" Sets the contents of the module at `url` to the lines of the current buffer.
+funct! vamoose#push(...)
+  let [exchange_kwargs, args] = call(function('s:prepare_pull_push_args'), a:000)
+  python oomax.Exchange(**vim.eval('exchange_kwargs')).push(*(vim.eval('args') + [vim.current.buffer]))
+endfunct
 
 python <<EOF
 # TODO: make sure that `oomax` is available and of an appopriate version.
-#       The script should launch an ``easy_install`` of it.
+#       The script should launch an ``easy_install`` of it if necessary.
 import vim
 import oomax
 EOF
