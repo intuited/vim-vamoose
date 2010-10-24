@@ -51,6 +51,12 @@ you can open a Basic module with the command >
 If you need to specify the port 1234, it would look like >
     :tabedit vamoose://:1234//SpruceGoose//Standard.Module1
 
+Buffers opened with vamoose URLs work in the normal way:
+you should be able to update the OpenOffice document
+by making changes and doing |:write|.
+You should see your changes reflected in OpenOffice
+if you open the module in the code editor or invoke a macro in it.
+
 ==============================================================================
 Connecting to OpenOffice                               *vamoose-running-ooo*
 
