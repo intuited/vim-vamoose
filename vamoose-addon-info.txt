@@ -1,6 +1,6 @@
 {
   "name" : "vamoose",
-  "version" : "0.1.3",
+  "version" : "0.1.4",
   "author" : "Ted Tibbetts <intuited@gmail.com>",
   "maintainer" : "Ted Tibbetts <intuited@gmail.com>",
   "repository" : {"type": "git", "url": "git://github.com/intuited/vim-vamoose.git"},

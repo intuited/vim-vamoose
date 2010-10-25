@@ -135,7 +135,12 @@ endfunct
 funct! vamoose#pull(...)
   let [exchange_kwargs, args] = call(function('s:prepare_pull_push_args'), a:000)
 
-  python vim.current.buffer[:] = map(str, vamoose.oomax.Exchange(**vim.eval('exchange_kwargs')).pull(*vim.eval('args')))
+python <<QED
+try:
+    vim.current.buffer[:] = map(str, vamoose.oomax.Exchange(**vim.eval('exchange_kwargs')).pull(*vim.eval('args')))
+except KeyError:
+    vim.eval("""call(function('vamoose#push'), a:000)""")
+QED
   set ft=vb
 endfunct
 
