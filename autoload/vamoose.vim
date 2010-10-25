@@ -136,7 +136,7 @@ funct! vamoose#pull(...)
   let [exchange_kwargs, args] = call(function('s:prepare_pull_push_args'), a:000)
 
   python vim.current.buffer[:] = map(str, vamoose.oomax.Exchange(**vim.eval('exchange_kwargs')).pull(*vim.eval('args')))
-  set ft=basic
+  set ft=vb
 endfunct
 
 " vamoose#push([url[, override]])
