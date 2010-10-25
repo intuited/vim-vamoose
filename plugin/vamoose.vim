@@ -12,7 +12,7 @@ let g:loaded_vamoose = 1
 " The autocommand stuff normally drives everything.
 augroup vamoose_files
   autocmd!
-  autocmd BufReadCmd  vamoose://**  exe vamoose#pull()
-  autocmd BufWriteCmd vamoose://**  exe vamoose#push()
-  " TODO: add a FileReadCmd autocommand.
+  autocmd BufReadCmd  vamoose://**  call vamoose#pull()
+  autocmd BufWriteCmd vamoose://**  call vamoose#push()
 augroup END
+" TODO: add a FileReadCmd autocommand.
