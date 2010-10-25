@@ -75,3 +75,19 @@ Sorry!
 If you also pass the option `-headless`,
 OpenOffice will start in invisible stealth mode.
 This will let you edit macros without alerting any spies to your activity.
+
+==============================================================================
+Options                                *vamoose-options* *vamoose-save-mode*
+                                 *g:vamoose_save_mode* *b:vamoose_save_mode*
+
+Currently, the only .vimrc configuration option for vamoose
+is the variable 'g:vamoose_save_mode'.
+
+If this variable is truthy (like 1),
+writing buffers will cause the documents which own their macro libraries
+to be saved.
+
+The default is to save documents.  This may be undesirable in some cases.
+
+This behaviour can be customized on a per-buffer level
+by setting the buffer variable 'b:vamoose_save_mode'.

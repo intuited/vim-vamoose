@@ -61,7 +61,7 @@ endfunct
 " In that case, the entire global URL is replaced with `url`.
 funct! vamoose#global_url(...)
   if a:0
-    if a:0 > 1 && a:2 ==# 'replace'
+    if a:0 > 1 && a:2 is 'replace'
       let s:url = a:1
     else
       call extend(s:url, a:1, a:0 > 1 ? a:2 : 'keep')
@@ -74,7 +74,34 @@ funct! vamoose#global_url(...)
 
   return s:url
 endfunct
-    
+
+
+" vamoose#buffer_save_mode([mode])
+" Setter/getter for buffer document save mode
+" `mode` parameter and return value are boolean.
+" Parameters:
+"   mode: If 1, documents are saved on macro module push.
+"         If 0, documents are not saved on macro module push.
+"         If 'global', uses the value of g:vamoose_save_mode,
+"                      or 1 if that variable is unset.
+"         Defaults to 'global'.
+funct! vamoose#buffer_save_mode(...)
+  if a:0
+    let b:vamoose_save_mode = a:1
+  endif
+
+  if !exists('b:vamoose_save_mode')
+    let b:vamoose_save_mode = 'global'
+  endif
+
+  return b:vamoose_save_mode is 'global' ? vamoose#global_save_mode() : b:vamoose_save_mode
+endfunct
+
+funct! vamoose#global_save_mode()
+  return exists('g:vamoose_save_mode') ? g:vamoose_save_mode : 1
+endfunct
+
+
 " vamoose#buffer_url([buffer])
 " vamoose URL components, based on the buffer name of `buffer`.
 " `buffer` defaults to '%'.
@@ -82,6 +109,7 @@ funct! vamoose#buffer_url(...)
   let buffer = a:0 ? a:1 : bufnr('%')
   return vamoose#parse_url(bufname(buffer))
 endfunct
+
 
 " Support function for vamoose#push and vamoose#pull.
 " Arguments:
@@ -98,8 +126,8 @@ funct! s:prepare_pull_push_args(...)
   call extend(url, vamoose#global_url(), 'keep')
 
   let exchange_kwargs = filter(copy(url), 'index(["host", "port"], v:key) >= 0')
-  let pull_args = [url.document, url.library, url.module]
-  return [exchange_kwargs, pull_args]
+  let args = [url.document, url.library, url.module]
+  return [exchange_kwargs, args]
 endfunct
 
 " vamoose#pull([url[, override]])
@@ -107,7 +135,7 @@ endfunct
 funct! vamoose#pull(...)
   let [exchange_kwargs, args] = call(function('s:prepare_pull_push_args'), a:000)
 
-  python vim.current.buffer[:] = map(str, oomax.Exchange(**vim.eval('exchange_kwargs')).pull(*vim.eval('args')))
+  python vim.current.buffer[:] = map(str, vamoose.oomax.Exchange(**vim.eval('exchange_kwargs')).pull(*vim.eval('args')))
   set ft=basic
 endfunct
 
@@ -115,12 +143,19 @@ endfunct
 " Sets the contents of the module at `url` to the lines of the current buffer.
 funct! vamoose#push(...)
   let [exchange_kwargs, args] = call(function('s:prepare_pull_push_args'), a:000)
-  python oomax.Exchange(**vim.eval('exchange_kwargs')).push(*(vim.eval('args') + [vim.current.buffer]))
+  let save = vamoose#buffer_save_mode()
+  " Convoluted dance to avoid polluting the python namespace
+  python vamoose.oomax.Exchange(**vim.eval('exchange_kwargs')
+                               \).push(*(vim.eval('args') + [vim.current.buffer]),
+                                     \save=True if vim.eval('save') != '0' else False)
+  set nomodified
 endfunct
+
 
 python <<EOF
 # TODO: make sure that `oomax` is available and of an appopriate version.
 #       The script should launch an ``easy_install`` of it if necessary.
 import vim
-import oomax
+class vamoose(object):
+    import oomax
 EOF
